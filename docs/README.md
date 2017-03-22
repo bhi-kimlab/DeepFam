@@ -7,7 +7,9 @@ DeepFam is a deep learning based alignment-free protein function prediction meth
 
 # Features
 
-* 
+* Do not need multiple or pairwise alignment of training sequences.
+* Instead capture locally similar fragment (motif) within a family by convolutional neural network.
+* Combine existence of motifs in dense layer for more accurate modelling.
 
 
 # Installation
@@ -33,22 +35,24 @@ $ python src/DeepFam/run.py --help
 One example of parameter setting is like:
 ```
 $ python src/DeepFam/run.py \
-  num_windows [256, 256, 256, 256, 256, 256, 256, 256] \ 
-  window_lengths [8, 12, 16, 20, 24, 28, 32, 36] \
-  num_hidden 2000 \
-  batch_size 100 \
-  keep_prob 0.7 \ 
-  learning_rate 0.001 \
-  regularizer 0.001 \ 
-  max_epoch 25 \
-  seq_len 1000 \ 
-  num_classes 1074 \ 
-  log_interval 100 \ 
-  save_interval 100 \ 
-  log_dir '/tmp/logs' \  
-  test_file '/data/test.txt' \ 
-  train_file '/data/train.txt' 
+  --num_windows [256, 256, 256, 256, 256, 256, 256, 256] \ 
+  --window_lengths [8, 12, 16, 20, 24, 28, 32, 36] \
+  --num_hidden 2000 \
+  --batch_size 100 \
+  --keep_prob 0.7 \ 
+  --learning_rate 0.001 \
+  --regularizer 0.001 \ 
+  --max_epoch 25 \
+  --seq_len 1000 \ 
+  --num_classes 1074 \ 
+  --log_interval 100 \ 
+  --save_interval 100 \ 
+  --log_dir '/tmp/logs' \  
+  --test_file '/data/test.txt' \ 
+  --train_file '/data/train.txt' 
 ```
 
+
+
 # Contact
-If you have any question or problem, please send a email to dane2522@gmail.com
+If you have any question or problem, please send a email to [dane2522@gmail.com](mailto:dane2522@gmail.com)
