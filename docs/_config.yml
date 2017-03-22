@@ -1,4 +1,4 @@
-theme: jekyll-theme-cayman
+theme: jekyll-theme-merlot
 titile: DeepFam
 description: A protein classification method by deep learning.
 show_downloads: true
