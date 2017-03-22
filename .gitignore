@@ -1,0 +1,10 @@
+/data/*
+/result/*
+/tmp/
+/Kmer/
+/Protvec/
+/result_adam/
+
+
+*.py[cod]
+__pycache__/
