@@ -1,4 +1,4 @@
 theme: jekyll-theme-cayman
-titile: DeepFam
-description: A protein classification method by deep learning.
+title: DeepFam
+description: An alignment-free protein function prediction method with deep learning.
 show_downloads: true
