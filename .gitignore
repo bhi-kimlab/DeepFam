@@ -4,7 +4,8 @@
 /Kmer/
 /Protvec/
 /result_adam/
-
+/testsrc/
+/gpcrsrc/
 
 *.py[cod]
 __pycache__/

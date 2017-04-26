@@ -78,6 +78,8 @@ class DataSet(object):
       
       if self._epochs_completed >= max_iter:
         break
+      elif len(batch) == 0:
+        continue
       else:
         yield batch
 
@@ -90,7 +92,8 @@ class DataSet(object):
       if self._index_in_epoch > self._num_data:
         end = self._num_data
         idxs = self._perm[start:end]
-        yield self.parse_data( idxs )
+        if len(idxs) > 0:
+          yield self.parse_data( idxs )
         break
       
       end = self._index_in_epoch

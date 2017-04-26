@@ -42,6 +42,13 @@ def train( FLAGS ):
                               for_training=True )
     # loss
     # slim.losses.softmax_cross_entropy(pred, placeholders['labels'])
+    # class_weight = tf.constant([[1.0, 5.0]])
+    # weight_per_label = tf.transpose( tf.matmul(placeholders['labels']
+    #                        , tf.transpose(class_weight)) )
+    # loss = tf.multiply(weight_per_label, 
+    #         tf.nn.softmax_cross_entropy_with_logits(labels=placeholders['labels'], logits=pred))
+    # loss = tf.losses.compute_weighted_loss(loss)
+
     tf.losses.softmax_cross_entropy(placeholders['labels'], pred)
     loss = tf.losses.get_total_loss()
 
@@ -75,6 +82,7 @@ def train( FLAGS ):
         step = 0
 
       # iter epoch
+      # for data, labels in dataset.iter_batch( FLAGS.batch_size, 5 ):
       for data, labels in dataset.iter_once( FLAGS.batch_size ):
         start_time = time.time()
         _, loss_val, acc_val = sess.run([train_op, loss, acc_op], feed_dict={

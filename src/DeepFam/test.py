@@ -7,6 +7,7 @@ import time
 from datetime import datetime
 import os
 import math
+from sklearn.metrics import roc_auc_score
 
 import tensorflow as tf
 import numpy as np
@@ -36,6 +37,7 @@ def test( FLAGS ):
     pred, layers = inference( placeholders['data'], FLAGS, 
                       for_training=False )
 
+    prob = tf.nn.softmax(pred)
     # calculate prediction
     _hit_op = tf.equal( tf.argmax(pred, 1), tf.argmax(placeholders['labels'], 1))
     hit_op = tf.reduce_sum( tf.cast( _hit_op ,tf.float32 ) )
@@ -61,19 +63,25 @@ def test( FLAGS ):
       # iter batch
       hit_count = 0.0
       total_count = 0
+      pred_list = []
+      label_list = []
 
       logging("%s: starting test." % (datetime.now()), FLAGS)
       start_time = time.time()
       total_batch_size = math.ceil( dataset._num_data / FLAGS.batch_size )
 
       for step, (data, labels) in enumerate(dataset.iter_once( FLAGS.batch_size )):
-        hits = sess.run( [hit_op], feed_dict={
+        hits, pred_val = sess.run( [hit_op, prob], feed_dict={
           placeholders['data']: data,
           placeholders['labels']: labels
         })
 
         hit_count += np.sum( hits )
         total_count += len( data )
+
+        for i, p in enumerate(pred_val):
+          pred_list.append( p[0] )
+          label_list.append( labels[i][0] )
 
         if step % FLAGS.log_interval == 0:
           duration = time.time() - start_time
@@ -86,8 +94,11 @@ def test( FLAGS ):
 
 
       # micro precision
-      logging("%s: micro-precision = %.5f" % 
-            (datetime.now(), (hit_count/total_count)), FLAGS)
+      # logging("%s: micro-precision = %.5f" % 
+      #       (datetime.now(), (hit_count/total_count)), FLAGS)
+      auc_val = roc_auc_score(label_list, pred_list)
+      logging("%s: micro-precision = %.5f, auc = %.5f" % 
+            (datetime.now(), (hit_count/total_count), auc_val), FLAGS)
 
 
 

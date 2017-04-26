@@ -42,7 +42,9 @@ def test( FLAGS ):
                       for_training=False )
 
     # calculate prediction
-    _hit_op = tf.equal( tf.argmax(pred, 1), tf.argmax(placeholders['labels'], 1))
+    pred_label_op = tf.argmax(pred, 1)
+    label_op = tf.argmax(placeholders['labels'], 1)
+    _hit_op = tf.equal( pred_label_op, label_op)
     hit_op = tf.reduce_sum( tf.cast( _hit_op ,tf.float32 ) )
 
     # create saver
@@ -70,19 +72,23 @@ def test( FLAGS ):
       # iter batch
       hit_count = 0.0
       total_count = 0
+      results = []
 
       logging("%s: starting test." % (datetime.now()), FLAGS)
       start_time = time.time()
       total_batch_size = math.ceil( dataset._num_data / FLAGS.batch_size )
 
       for step, (data, labels) in enumerate(dataset.iter_once( FLAGS.batch_size )):
-        hits = sess.run( [hit_op], feed_dict={
+        hits, pred, lb = sess.run( [hit_op, pred_label_op, label_op], feed_dict={
           placeholders['data']: data,
           placeholders['labels']: labels
         })
 
         hit_count += np.sum( hits )
         total_count += len( data )
+
+        for i, p in enumerate(pred):
+          results.append( (p, lb[i]) )
 
         if step % FLAGS.log_interval == 0:
           duration = time.time() - start_time
@@ -99,7 +105,11 @@ def test( FLAGS ):
             (datetime.now(), (hit_count/total_count)), FLAGS)
 
 
-
+      # write result
+      outpath = os.path.join( FLAGS.log_dir, "out.txt" )
+      with open(outpath, 'w') as fw:
+        for p, l in results:
+          fw.write("%d\t%d\n" % (int(l), int(p)))
 
 
 

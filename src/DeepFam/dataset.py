@@ -87,7 +87,7 @@ class DataSet(object):
     self._index_in_epoch += batch_size
 
     if self._index_in_epoch > self._num_data:
-      print("%d epoch finish!" % self._epochs_completed)
+      # print("%d epoch finish!" % self._epochs_completed)
       # finished epoch
       self._epochs_completed += 1
       # shuffle the data
@@ -109,6 +109,8 @@ class DataSet(object):
       
       if self._epochs_completed >= max_iter:
         break
+      elif len(batch) == 0:
+        continue
       else:
         yield batch
 
@@ -121,7 +123,8 @@ class DataSet(object):
       if self._index_in_epoch > self._num_data:
         end = self._num_data
         idxs = self._perm[start:end]
-        yield self.parse_data( idxs, with_raw )
+        if len(idxs) > 0:
+          yield self.parse_data( idxs, with_raw )
         break
       
       end = self._index_in_epoch

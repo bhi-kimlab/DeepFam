@@ -5,13 +5,63 @@
 """
 import sys
 import os
+import itertools
 
 import tensorflow as tf
 import numpy as np
 
 
 
+# # truncated version
+# class WordDict(object):
+#   def __init__(self, files, k, logpath):
+#     self._kmers = set()
+#     self.k = k
+#     self.w2i = dict()
+#     self.size = 0
 
+#     # check if file exist
+#     w2i_path = os.path.join(logpath, "w2i.txt")
+
+#     if os.path.exists(w2i_path):
+#       # load
+#       print("Load W2I")
+#       with open(w2i_path, 'r') as fr:
+#         for line in fr.readlines():
+#           self.size += 1
+#           word, i = line.strip().split("\t")
+#           i = int(i)
+#           self.w2i[word] = i
+#     else:
+#       print("Create new W2I")
+#       # parse files
+#       for f in files:
+#         self.parse_file(f)
+
+#       # set to sorted list -> dict
+#       for i, word in enumerate(sorted(self._kmers)):
+#         self.w2i[ word ] = i
+#         self.size += 1
+
+#       del self._kmers
+#       # save w2i
+#       with open(w2i_path, 'w') as fw:
+#         for word, i in self.w2i.iteritems():
+#           fw.write("%s\t%d\n" % (word, i))
+ 
+
+#   def parse_file(self, fpath):
+#     with open( fpath, 'r') as tr:
+#       for row in tr.readlines():
+#         (label, seq) = row.strip().split("\t")
+#         seq = seq.strip("_")
+#         seqlen = len(seq)
+
+#         for i in range( seqlen - self.k + 1 ):
+#           self._kmers.add( seq[i:i+self.k] )
+
+
+# use all version
 class WordDict(object):
   def __init__(self, files, k, logpath):
     self._kmers = set()
@@ -33,9 +83,8 @@ class WordDict(object):
           self.w2i[word] = i
     else:
       print("Create new W2I")
-      # parse files
-      for f in files:
-        self.parse_file(f)
+      # generate kmer dict
+      self.gen_kdict()
 
       # set to sorted list -> dict
       for i, word in enumerate(sorted(self._kmers)):
@@ -58,6 +107,15 @@ class WordDict(object):
 
         for i in range( seqlen - self.k + 1 ):
           self._kmers.add( seq[i:i+self.k] )
+
+
+  def gen_kdict(self):
+    CHAR = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    lst = [ CHAR for i in range(self.k) ]
+
+    for elem in itertools.product(*lst):
+      kmer = ''.join(elem)
+      self._kmers.add( kmer )
 
 
 
@@ -121,6 +179,8 @@ class DataSet(object):
       
       if self._epochs_completed >= max_iter:
         break
+      elif len(batch) == 0:
+        continue
       else:
         yield batch
 
@@ -133,7 +193,8 @@ class DataSet(object):
       if self._index_in_epoch > self._num_data:
         end = self._num_data
         idxs = self._perm[start:end]
-        yield self.parse_data( idxs )
+        if len(idxs) > 0:
+          yield self.parse_data( idxs )
         break
       
       end = self._index_in_epoch
