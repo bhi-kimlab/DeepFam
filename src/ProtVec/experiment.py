@@ -14,7 +14,7 @@ num_classes = 1074
 
 
 ## globals
-num_threads = 1
+num_threads = 3
 enclosure_queue = Queue()
 
 
@@ -34,13 +34,16 @@ def run(i, queue):
 
 
 
-# tests = ["test1", "test2", "test3"]
-# indirs = [ os.path.join( "/home/kimlab/project/DeepFam/data", p ) for p in tests ]
-# outdirs = [ os.path.join( "/home/kimlab/project/DeepFam/Protvec", p ) for p in tests ]
+# ## general
+# k = 3
+# # tests = ["90percent", "dataset1", "dataset2", "dataset0"]
 # embedding_file = "/home/kimlab/project/DeepFam/ref/protVec_100d_3grams.csv"
 
-# for idx, expname in enumerate(outdirs):
-#   indir = indirs[idx]
+# for exp in tests:
+#   indir = os.path.join( "/home/kimlab/project/DeepFam", "data", "cog_cv", exp )
+#   outdir = os.path.join( "/home/kimlab/project/DeepFam", "result", "Protvec" )
+#   expname = os.path.join( outdir, exp )
+
 #   logdir = os.path.join( expname, "logs" )
 #   mkdir( os.path.join( logdir, "train" ) )
 #   mkdir( os.path.join( logdir, "test" ) )
@@ -49,27 +52,35 @@ def run(i, queue):
 #   ckptfile = os.path.join( ckptdir, "model.ckpt" )
 #   mkdir( ckptdir )
 
-#   # cmd
 #   s="python %s" % os.path.join( os.path.dirname(os.path.realpath(__file__)), "run.py" )
 #   s+= " --num_classes=%s " % ( num_classes )
 #   s+= " --embedding_file=%s " % ( embedding_file )
-#   s+= " --max_epoch=30"
+#   s+= " --max_epoch %d" % 25
 #   s+= " --train_file=%s" % os.path.join( indir, "train.txt" )
 #   s+= " --test_file=%s" % os.path.join( indir, "test.txt" )
-#   s+= " --checkpoint_path=%s --log_dir=%s" % (ckptdir, logdir)
+#   s+= " --checkpoint_path=%s --log_dir=%s" % (ckptfile, logdir)
 #   s+= " --batch_size=100"
 
 #   enclosure_queue.put( s )
 
 
+
+
+
+
+num_classes = 1796
+seqlen = 1000
+
+# num_classes = 2892
+# seqlen = 1000
+
 k = 3
-# tests = ["90percent", "dataset1", "dataset2", "dataset0"]
-tests = ["dataset0"]
+tests = ["dataset0", "dataset1", "dataset2"]
 embedding_file = "/home/kimlab/project/DeepFam/ref/protVec_100d_3grams.csv"
 
 for exp in tests:
-  indir = os.path.join( "/home/kimlab/project/DeepFam", "data", "cog_cv", exp )
-  outdir = os.path.join( "/home/kimlab/project/DeepFam", "result", "Protvec" )
+  indir = os.path.join( "/home/kimlab/project/DeepFam", "data", "l_1000_s_250", exp )
+  outdir = os.path.join( "/home/kimlab/project/DeepFam", "result", "l_1000_s_250_protvec" )
   expname = os.path.join( outdir, exp )
 
   logdir = os.path.join( expname, "logs" )
@@ -88,6 +99,7 @@ for exp in tests:
   s+= " --test_file=%s" % os.path.join( indir, "test.txt" )
   s+= " --checkpoint_path=%s --log_dir=%s" % (ckptfile, logdir)
   s+= " --batch_size=100"
+  s+= " --log_interval %d --save_interval %d" % (100, 10000)
 
   enclosure_queue.put( s )
 
@@ -95,6 +107,10 @@ for exp in tests:
 
 
 
+
+
+
+# ## GPCR
 # k = 3
 # tests = [ "cv_%d" % i for i in range(10) ]
 # indirs = [ os.path.join( "/home/kimlab/project/DeepFam/tmp/gpcr/data/subfamily_level", p ) for p in tests ]
@@ -130,7 +146,7 @@ for exp in tests:
 
 ## main
 # for i in range( num_threads ):
-for i in range( 4, 4+num_threads ):
+for i in range( 1, 1+num_threads ):
   worker = Thread( target=run, args=(i, enclosure_queue,) )
   worker.setDaemon(True)
   worker.start()
