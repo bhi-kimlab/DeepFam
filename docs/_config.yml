@@ -1,4 +1,4 @@
 theme: jekyll-theme-cayman
 title: DeepFam
-description: An alignment-free protein function prediction method with deep learning.
+description: Deep learning based alignment-free method for protein family modeling and prediction.
 show_downloads: true

@@ -1,15 +1,15 @@
 # About DeepFam
 
-DeepFam is a deep learning based alignment-free protein function prediction method. DeepFam first extracts motif-like features from a raw sequence in convolution layer and make a prediction based on the features.
+DeepFam is a deep learning based alignment-free protein function prediction method. DeepFam first extracts features of conserved regions from a raw sequence by convolution layer and makes a prediction based on the features.
 
-![Figure](/docs/images/Figure1.png)
+![Figure](https://github.com/bhi-kimlab/DeepFam/blob/master/docs/images/Figure1.png)
 
 
 # Features
 
-* Do not need multiple or pairwise alignment of training sequences.
-* Instead capture locally similar fragment (motif) within a family by convolutional neural network.
-* Combine existence of motifs in dense layer for more accurate modelling.
+* Alignment-free: Do not need multiple or pairwise sequence alignment to train family model.
+* Instead, locally conserved regions within a family are trained by convolution units and 1-max pooling. Convolution unit works similar as PSSM.
+* Utilizing variable-size convolution unit (multiscale convolution unit) to train family specific conserved regions whose lengths are usually various.
 
 
 # Installation
@@ -51,6 +51,9 @@ $ python src/DeepFam/run.py \
   --test_file '/data/test.txt' \ 
   --train_file '/data/train.txt' 
 ```
+
+
+## Data 
 
 
 
