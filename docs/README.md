@@ -2,7 +2,7 @@
 
 DeepFam is a deep learning based alignment-free protein function prediction method. DeepFam first extracts features of conserved regions from a raw sequence by convolution layer and makes a prediction based on the features.
 
-![Figure](https://github.com/bhi-kimlab/DeepFam/blob/master/docs/images/Figure1.png)
+![Figure](https://github.com/bhi-kimlab/DeepFam/blob/master/docs/images/Figure1.png?raw=true)
 
 
 # Features
@@ -53,8 +53,8 @@ $ python src/DeepFam/run.py \
 ```
 
 
-## Data 
-
+# Data 
+All data used by experiments described in manuscript is available at [here](http://epigenomics.snu.ac.kr/DeepFam/).
 
 
 # Contact
