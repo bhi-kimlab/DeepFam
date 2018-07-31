@@ -54,7 +54,7 @@ $ python src/DeepFam/run.py \
 
 
 # Data 
-All data used by experiments described in manuscript is available at [here](http://epigenomics.snu.ac.kr/DeepFam/).
+All data used by experiments described in manuscript is available at [here](http://epigenomics.snu.ac.kr/DeepFam/data.zip).
 
 
 # Contact
